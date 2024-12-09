@@ -10,8 +10,7 @@ if 'step' not in st.session_state:
 
 
 # API 초기화
-load_dotenv()
-client = anthropic.Client(api_key=os.environ.get("CLAUDE_API_KEY"))
+client = anthropic.Client(api_key=st.secrets["CLAUDE_API_KEY"])
 
 def show_progress_steps(current_step: int):
     """진행 단계 표시"""
@@ -163,18 +162,27 @@ def main():
             key=f"response_{current_step}"
         )
         
-        # 예시와 팁 (아래에 표시)
         with st.expander("💡 Examples and tips to help you craft your response"):
             for i, example in enumerate(examples, 1):
-                st.markdown(f"**Example {i}**")
-                if st.button(f"Use this", key=f"example_{i}"):
-                    st.session_state[f"response_{current_step}"] = example
-                st.write(example)
-                st.write("---")
-            
+                col1, col2 = st.columns([8, 2])  # 예제 텍스트와 버튼을 나란히 배치
+                with col1:
+                    # 클릭 가능한 예제 텍스트
+                    if st.button(example, key=f"example_button_{i}"):
+                        st.session_state[f"response_{current_step}"] = example
+                        st.experimental_rerun()
+
+                with col2:
+                    # "Use this" 버튼
+                    if st.button(f"Use this {i}", key=f"use_button_{i}"):
+                        st.session_state[f"response_{current_step}"] = example
+                        st.experimental_rerun()
+                
+                st.write("---")  # 각 예제 구분선
+
             st.markdown("**Key points to consider:**")
             for tip in tips:
                 st.write(tip)
+
         
         # Continue 버튼
         if st.button("Continue" if current_step < 2 else "Create Draft"):
