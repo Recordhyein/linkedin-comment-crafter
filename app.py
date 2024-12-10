@@ -163,25 +163,21 @@ def main():
         )
         
         with st.expander("💡 Examples and tips to help you craft your response"):
+            # 예시 답변들
+            st.markdown("**Click an example to use it:**")
             for i, example in enumerate(examples, 1):
-                col1, col2 = st.columns([8, 2])  # 예제 텍스트와 버튼을 나란히 배치
-                with col1:
-                    # 클릭 가능한 예제 텍스트
-                    if st.button(example, key=f"example_button_{i}"):
-                        st.session_state[f"response_{current_step}"] = example
-                        st.experimental_rerun()
-
-                with col2:
-                    # "Use this" 버튼
-                    if st.button(f"Use this {i}", key=f"use_button_{i}"):
-                        st.session_state[f"response_{current_step}"] = example
-                        st.experimental_rerun()
-                
-                st.write("---")  # 각 예제 구분선
-
+                # 하나의 버튼으로 통일
+                if st.button(f"Example {i}: {example}", 
+                           key=f"example_{current_step}_{i}",
+                           use_container_width=True):  # 버튼 전체 너비 사용
+                    st.session_state[f"response_{current_step}"] = example
+                    st.rerun()
+                st.write("---")
+            
+            # 고려할 점들
             st.markdown("**Key points to consider:**")
             for tip in tips:
-                st.write(tip)
+                st.write(f"• {tip}")
 
         
         # Continue 버튼
