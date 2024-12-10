@@ -168,18 +168,15 @@ def main():
             key=f"response_{current_step}"
         )
         with st.expander("💡 Examples and tips to help you craft your response"):
-            st.markdown("**Examples you can use:**")
+            # 예시 답변들
+            st.markdown("**Examples (click to copy):**")
             for i, example in enumerate(examples, 1):
-                col1, col2 = st.columns([8, 2])
-                with col1:
-                    st.markdown(f"**Example {i}:**\n{example}")
-                with col2:
-                    if st.button("Use", key=f"use_example_{current_step}_{i}"):
-                        st.session_state.temp_response = example  # 임시 저장소에 저장
-                        st.rerun()
+                st.code(example, language=None)  # code 블록으로 표시하면 자동으로 복사 버튼이 생깁니다
             
+            # 구분선
             st.markdown("---")
             
+            # 고려할 점들
             st.markdown("**Key points to consider:**")
             for tip in tips:
                 st.write(f"• {tip}")
