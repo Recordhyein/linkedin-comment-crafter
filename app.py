@@ -156,14 +156,18 @@ def main():
         st.write(question)
         
         # 텍스트 입력 영역
+                # 임시 저장소 키 추가
+        if 'temp_response' not in st.session_state:
+            st.session_state.temp_response = ""
+        
+        # 질문과 답변 단계 부분에서 텍스트 영역을 먼저 렌더링
         response = st.text_area(
             "Your response",
+            value=st.session_state.get('temp_response', ''),  # 임시 저장소에서 값 가져오기
             height=200,
             key=f"response_{current_step}"
         )
-        
         with st.expander("💡 Examples and tips to help you craft your response"):
-            # 예시 답변들
             st.markdown("**Examples you can use:**")
             for i, example in enumerate(examples, 1):
                 col1, col2 = st.columns([8, 2])
@@ -171,14 +175,11 @@ def main():
                     st.markdown(f"**Example {i}:**\n{example}")
                 with col2:
                     if st.button("Use", key=f"use_example_{current_step}_{i}"):
-                        response = example  # 임시 변수에 저장
-                        st.session_state[f"response_{current_step}"] = response
+                        st.session_state.temp_response = example  # 임시 저장소에 저장
                         st.rerun()
             
-            # 구분선
             st.markdown("---")
             
-            # 고려할 점들
             st.markdown("**Key points to consider:**")
             for tip in tips:
                 st.write(f"• {tip}")
