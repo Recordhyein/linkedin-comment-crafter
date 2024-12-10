@@ -129,7 +129,7 @@ def main():
             st.session_state.step = 3
             st.rerun()
     
-    # 질문과 답변 단계
+        # 질문과 답변 단계
     elif 3 <= st.session_state.step <= 5:
         step_titles = [
             "What resonates with you?",
@@ -155,38 +155,33 @@ def main():
         
         st.write(question)
         
-        # 텍스트 입력 영역
-                # 임시 저장소 키 추가
-        if 'temp_response' not in st.session_state:
-            st.session_state.temp_response = ""
-        
-        # 질문과 답변 단계 부분에서 텍스트 영역을 먼저 렌더링
+        # 텍스트 영역을 먼저 렌더링
+        response_key = f"response_{current_step}"
         response = st.text_area(
             "Your response",
-            value=st.session_state.get('temp_response', ''),  # 임시 저장소에서 값 가져오기
+            value=st.session_state.get(f'temp_{response_key}', ''),  # 임시 값 사용
             height=200,
-            key=f"response_{current_step}"
+            key=response_key
         )
+        
         with st.expander("💡 Examples and tips to help you craft your response"):
-            # 예시 답변들
             st.markdown("**Examples (click to copy):**")
             for i, example in enumerate(examples, 1):
-                st.code(example, language=None)  # code 블록으로 표시하면 자동으로 복사 버튼이 생깁니다
+                st.code(example, language=None)
             
-            # 구분선
             st.markdown("---")
-            
-            # 고려할 점들
             st.markdown("**Key points to consider:**")
             for tip in tips:
                 st.write(f"• {tip}")
-
         
         # Continue 버튼
         if st.button("Continue" if current_step < 2 else "Create Draft"):
             if response:
                 st.session_state.responses.append(response)
                 st.session_state.step += 1
+                # 임시 값 초기화
+                if f'temp_{response_key}' in st.session_state:
+                    del st.session_state[f'temp_{response_key}']
                 st.rerun()
     
     elif st.session_state.step == 6:
