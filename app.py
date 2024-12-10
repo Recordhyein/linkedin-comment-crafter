@@ -80,7 +80,7 @@ def generate_question_and_examples(post_content, previous_responses=None, user_p
     return response.content[0].text.strip()
 
 def main():
-    st.title("LinkedIn Comment Crafter")
+    st.title("LinkedIn Comment Crafter!")
     
     if st.session_state.step > 1:
         show_progress_steps(st.session_state.step)
